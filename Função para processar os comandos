@@ -1,0 +1,52 @@
+
+// Função para processar os comandos recebidos pela interface web
+void handleControl() {
+  if (servidor.hasArg("cmd")) {
+    String command = servidor.arg("cmd");
+    Serial.println("Comando recebido: " + command);
+
+    // Controle do drone baseado no comando
+    if (command == "up") {
+      // Comando para subir
+      Serial.println("Subindo o drone");
+      // Aqui você pode colocar o código para mover o drone para cima
+    } else if (command == "down") {
+      // Comando para descer
+      Serial.println("Descendo o drone");
+      // Aqui você pode colocar o código para mover o drone para baixo
+    } else if (command == "left") {
+      // Comando para mover para a esquerda
+      Serial.println("Movendo para a esquerda");
+      // Aqui você pode colocar o código para mover o drone para a esquerda
+    } else if (command == "right") {
+      // Comando para mover para a direita
+      Serial.println("Movendo para a direita");
+      // Aqui você pode colocar o código para mover o drone para a direita
+    }
+
+    // Resposta para o navegador
+    servidor.send(200, "text/plain", "Comando recebido: " + command);
+  } else {
+    servidor.send(400, "text/plain", "Comando não encontrado");
+  }
+}
+
+void setup() {
+  setupWiFi();  // Conecta ao Wi-Fi
+  
+  // Define a rota para servir a página HTML
+  servidor.on("/", [](){
+    servidor.send(200, "text/html", htmlContent);
+  });
+
+  // Rota para capturar os comandos de controle
+  servidor.on("/control", HTTP_GET, handleControl);
+
+  // Inicia o servidor web
+  servidor.begin();
+  Serial.println("Servidor WEB iniciado!");
+}
+
+void loop() {
+  servidor.handleClient();  // Mantém o servidor ativo para tratar requisições
+}
